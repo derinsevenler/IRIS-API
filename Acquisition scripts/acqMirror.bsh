@@ -1,6 +1,6 @@
 // Micro-manager acquisition script for acquiring a 'mirror' file
 
-addClassPath(".");
+importCommands("C:/_instrument files/IRIS-API/Acquisition scripts/");
 
 irisAcq = IRISAcquisitions();
 

@@ -1,6 +1,10 @@
 // Example acquisition script for acquiring a single averaged frame
 // with current settings
 
-irisAcq = IRISAcquisitions();
+addClassPath("C:/_instrument files/IRIS-API/");
+importCommands("Acquisition scripts/");
+reloadClasses();
+
+irisAcq = IrisAcquisitions();
 thisImp = irisAcq.multiFrame(16); // average 16 frame
 thisImp.show();

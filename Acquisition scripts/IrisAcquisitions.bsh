@@ -1,18 +1,19 @@
 // Micro-manager acquisition script for acquiring a single 4-color IRIS image
 
-
-import ij.ImagePlus;
-import ij.ImageStack;
-import ij.plugin.ZProjector;
-
-IrisAcquisitions{
+IrisAcquisitions() {
 	// Several acquisition methods for IRIS
+
+	import ij.ImagePlus;
+	import ij.plugin.ZProjector;
+	import ij.ImageStack;
 
 	width = mmc.getImageWidth();
 	height = mmc.getImageHeight();
 	bitDepth = mmc.getImageBitDepth();
+	exposureTime = mmc.getExposure();
 
 	multiFrame(int nFrames){
+		print("0");
 		// Acquire 'nFrames' number of images and average them, using current settings.
 		mm.live().setLiveMode(false);
 		liveDisplay = mm.live().getDisplay();
@@ -20,7 +21,7 @@ IrisAcquisitions{
 			liveDisplay.forceClosed();
 		}
 		mm.data().clearPipeline(); // i.e., 'on-the-fly' processors
-
+		
 		zProjector = new ZProjector();
 		zProjector.setMethod(0);
 
@@ -57,11 +58,9 @@ IrisAcquisitions{
 	
 	multiChannel(String configName, String[] channels, int nFrames){
 		// Acquire a multicolor IRIS image, averaging nFrames for each channel.
-		
-		ImageStack irisStack = new ImageStack((int)width, (int) height, (int)nChannels);
-
-		for(int i = 0; i<nChannels; i++){
-			mmc.setConfig(configName, channels[c]);
+		ImageStack irisStack = new ImageStack((int)width, (int) height, (int)channels.length);
+		for(int i = 0; i<channels.length; i++){
+			mmc.setConfig(configName, channels[i]);
 			irisStack.setPixels(multiFrame(nFrames).getProcessor().getPixels(), i+1);
 		}
 		return new ImagePlus("multicolor stack", irisStack);
