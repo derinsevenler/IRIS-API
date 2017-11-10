@@ -1,0 +1,40 @@
+// Micro-manager acquisition script for acquiring a 'mirror' file
+
+addClassPath(".");
+
+irisAcq = IRISAcquisitions();
+
+configName = "LEDs";
+String[] channels = new String {"Blue", "Green", "Yellow", "Red"};
+
+nPosX = 2;
+nPosY = 2;
+avgFrames = 16; // frames to average at each position
+delta = 200; // microns
+
+// A hyperstack to hold our frames in memory
+mirrorStack = ij.createHyperStack("Mirror", irisAcq.width, irisAcq.height, 4, 1, (nPosX*nPosY), irisAcq.bitDepth);
+
+for (int x=0; x<nPosX; x++){
+	thisX = starX + delta*x;
+	mmc.setXYPosition(thisX, thisY);
+	mmc.sleep(1000);
+	for (int y=0; y<nPosY; y++){
+		thisY = starY + delta*y;
+		mmc.setXYPosition(thisX, thisY);
+		mmc.sleep(1000);
+
+		thisImp = irisAcq.multiChannel(configName, channels, nFrames);
+		for(int k=1; k<5; k++){
+			mirrorStack.getStack.setProcessor( thisImp.getProcessor(k), (1+x+nPosX*y) );
+		}
+	}
+}
+
+zProjector = new ZProjector();
+zProjector.setMethod(0);
+zProjector.setImage(burstImp);
+zProjector.doProjection();
+mirrorImp = zProjector.getProjection();
+mirrorImp.set("Mirror frames");
+mirrorImp.show();

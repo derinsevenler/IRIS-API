@@ -1,0 +1,71 @@
+// Micro-manager acquisition script for acquiring a single 4-color IRIS image
+
+
+import ij.ImagePlus;
+import ij.ImageStack;
+import ij.plugin.ZProjector;
+
+IrisAcquisitions{
+	// Several acquisition methods for IRIS
+
+	width = mmc.getImageWidth();
+	height = mmc.getImageHeight();
+	bitDepth = mmc.getImageBitDepth();
+
+	multiFrame(int nFrames){
+		// Acquire 'nFrames' number of images and average them, using current settings.
+		mm.live().setLiveMode(false);
+		liveDisplay = mm.live().getDisplay();
+		if (liveDisplay != null){
+			liveDisplay.forceClosed();
+		}
+		mm.data().clearPipeline(); // i.e., 'on-the-fly' processors
+
+		zProjector = new ZProjector();
+		zProjector.setMethod(0);
+
+		mmc.stopSequenceAcquisition();
+		mmc.clearCircularBuffer();
+
+		ImageStack burstStack = new ImageStack((int)width, (int) height, nFrames);
+		ImagePlus burstImp = new ImagePlus("burst");
+		mmc.waitForSystem();
+		mmc.prepareSequenceAcquisition(mmc.getCameraDevice());
+		mmc.startContinuousSequenceAcquisition(exposureTime/10.0);
+		curFrame = 0;
+		while ( curFrame < nFrames ){
+			if (mmc.getRemainingImageCount() > 0) {
+				burstStack.setPixels(mmc.popNextImage(),curFrame+1); //note frame indexing starts at 1
+				curFrame++;
+			}
+			else {
+				// Wait for the next image to arrive.
+				Thread.sleep(5);
+			}
+		}
+		mmc.stopSequenceAcquisition();
+		mmc.clearCircularBuffer();
+
+		// Average the frames
+
+		burstImp.setStack(burstStack);
+		zProjector.setImage(burstImp);
+		zProjector.doProjection();
+		
+		return zProjector.getProjection();
+	}
+	
+	multiChannel(String configName, String[] channels, int nFrames){
+		// Acquire a multicolor IRIS image, averaging nFrames for each channel.
+		
+		ImageStack irisStack = new ImageStack((int)width, (int) height, (int)nChannels);
+
+		for(int i = 0; i<nChannels; i++){
+			mmc.setConfig(configName, channels[c]);
+			irisStack.setPixels(multiFrame(nFrames).getProcessor().getPixels(), i+1);
+		}
+		return new ImagePlus("multicolor stack", irisStack);
+	}
+
+	return this;
+}
