@@ -1,15 +1,17 @@
 // Micro-manager acquisition script for acquiring a 'mirror' file
 
-importCommands("C:/_instrument files/IRIS-API/Acquisition scripts/");
-
-irisAcq = IRISAcquisitions();
+addClassPath("C:/_instrument files/IRIS-API/");
+importCommands("Acquisition scripts/");
+reloadClasses();
 
 configName = "LEDs";
-String[] channels = new String {"Blue", "Green", "Yellow", "Red"};
+String[] channels = new String[] {"Blue", "Green", "Yellow", "Red"};
+
+irisAcq = IrisAcquisitions();
 
 nPosX = 2;
 nPosY = 2;
-avgFrames = 16; // frames to average at each position
+nFrames = 16; // average 16 frames for each channel
 delta = 200; // microns
 
 // A hyperstack to hold our frames in memory
