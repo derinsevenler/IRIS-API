@@ -1,0 +1,11 @@
+// Script for acquiring a time-series of IRIS images
+
+addClassPath("C:/_instrument files/IRIS-API/");
+importCommands("Acquisition scripts/");
+reloadClasses();
+
+configName = "LEDs";
+String[] channels = new String[] {"Blue", "Green", "Yellow", "Red"};
+nFrames = 16; // average 16 frames for each channel
+
+irisAcq = IrisAcquisitions();
