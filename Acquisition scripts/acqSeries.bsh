@@ -1,4 +1,4 @@
-// Script for acquiring a time-series of IRIS images
+// Example script for acquiring a time-series of averaged IRIS images
 
 addClassPath("C:/_instrument files/IRIS-API/");
 importCommands("Acquisition scripts/");
@@ -6,6 +6,24 @@ reloadClasses();
 
 configName = "LEDs";
 String[] channels = new String[] {"Blue", "Green", "Yellow", "Red"};
-nFrames = 16; // average 16 frames for each channel
+nFrames = 16; // average 32 frames for each channel
 
 irisAcq = IrisAcquisitions();
+
+deltaT = 10; // time between acquisitions
+exptT = 60*1; // tota acquisition/experiment time in seconds, e.g. 1 minute
+timepoints = new ArrayList();
+
+startT = System.currentTimeMillis();
+elapsedT = (System.currentTimeMillis() - startT)/1000.0;
+
+// 4 channels, 1 z-slice, and 
+frames = ij.createHyperStack("Frames", irisAcq.width, irisAcq.height, 4, 1, 1, irisAcq.bitDepth);
+while (elapsedT < exptT){
+	thisImp = irisAcq.multiFrame(nFrames);
+	elapsedT = (System.currentTimMillis()- startT)/1000.0;
+	
+	for(int k=1; k<5; k++){
+		frames.getStack().addSlice( thisImp.getProcessor(k));
+	}
+}
