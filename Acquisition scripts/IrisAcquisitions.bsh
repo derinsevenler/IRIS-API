@@ -1,14 +1,17 @@
 // Functions for performing acquisitions for IRIS
 
+import ij.plugins.ZProjector;
+import ij.ImagePlus;
+import ij.process.ImageProcessor;
 
 IrisAcquisitions() {
 	// Several acquisition methods for IRIS
 
 
-	width = mmc.getImageWidth();
-	height = mmc.getImageHeight();
-	bitDepth = mmc.getImageBitDepth();
-	exposureTime = mmc.getExposure();
+	int width = mmc.getImageWidth();
+	int height = mmc.getImageHeight();
+	int bitDepth = mmc.getImageBitDepth();
+	long exposureTime = mmc.getExposure();
 
 	multiFrame(int nFrames){
 		// Acquire 'nFrames' number of images and average them, using current settings.
