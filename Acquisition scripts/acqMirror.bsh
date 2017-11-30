@@ -2,7 +2,6 @@
 
 addClassPath("C:/_instrument files/IRIS-API/");
 importCommands("Acquisition scripts/");
-reloadClasses();
 
 configName = "LEDs";
 String[] channels = new String[] {"Blue", "Green", "Yellow", "Red"};

@@ -1,8 +1,8 @@
 // Example acquisition script for acquiring a single multi-channel frame
 
-addClassPath("C:/_instrument files/IRIS-API/");
+// addClassPath("C:/_instrument files/IRIS-API/");
+addClassPath("/Users/derin/IRIS software/IRIS-API/");
 importCommands("Acquisition scripts/");
-reloadClasses();
 
 configName = "LEDs";
 String[] channels = new String[] {"Blue", "Green", "Yellow", "Red"};

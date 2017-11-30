@@ -1,11 +1,9 @@
 // Functions for performing acquisitions for IRIS
 
+
 IrisAcquisitions() {
 	// Several acquisition methods for IRIS
 
-	import ij.ImagePlus;
-	import ij.plugin.ZProjector;
-	import ij.ImageStack;
 
 	width = mmc.getImageWidth();
 	height = mmc.getImageHeight();
@@ -13,7 +11,6 @@ IrisAcquisitions() {
 	exposureTime = mmc.getExposure();
 
 	multiFrame(int nFrames){
-		print("0");
 		// Acquire 'nFrames' number of images and average them, using current settings.
 		mm.live().setLiveMode(false);
 		liveDisplay = mm.live().getDisplay();
@@ -48,12 +45,13 @@ IrisAcquisitions() {
 		mmc.clearCircularBuffer();
 
 		// Average the frames
-
 		burstImp.setStack(burstStack);
+		// burstImp.show();
+
 		zProjector.setImage(burstImp);
 		zProjector.doProjection();
-		
-		return zProjector.getProjection();
+		finalImp = new ImagePlus("avg frame", zProjector.getProjection().getProcessor());
+		return finalImp;
 	}
 	
 	multiChannel(String configName, String[] channels, int nFrames){

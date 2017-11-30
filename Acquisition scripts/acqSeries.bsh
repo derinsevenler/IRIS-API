@@ -17,13 +17,13 @@ timepoints = new ArrayList();
 startT = System.currentTimeMillis();
 elapsedT = (System.currentTimeMillis() - startT)/1000.0;
 
-// 4 channels, 1 z-slice, and 
+// 4 channels, 1 z-slice
 frames = ij.createHyperStack("Frames", irisAcq.width, irisAcq.height, 4, 1, 1, irisAcq.bitDepth);
 while (elapsedT < exptT){
 	thisImp = irisAcq.multiFrame(nFrames);
 	elapsedT = (System.currentTimMillis()- startT)/1000.0;
 	
 	for(int k=1; k<5; k++){
-		frames.getStack().addSlice( thisImp.getProcessor(k));
+		frames.getStack().addSlice( thisImp.getProcessor(k) );
 	}
 }
