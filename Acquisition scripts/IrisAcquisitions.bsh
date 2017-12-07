@@ -1,8 +1,6 @@
 // Functions for performing acquisitions for IRIS
 
-import ij.plugins.ZProjector;
-import ij.ImagePlus;
-import ij.process.ImageProcessor;
+
 
 IrisAcquisitions() {
 	// Several acquisition methods for IRIS

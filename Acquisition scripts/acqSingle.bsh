@@ -10,4 +10,4 @@ importCommands("Acquisition scripts/");
 
 irisAcq = IrisAcquisitions();
 thisImg = irisAcq.multiFrame(4); // average 16 frame
-thisImg.show()
+thisImg.show();

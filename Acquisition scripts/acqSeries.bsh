@@ -1,42 +1,50 @@
 // Example script for acquiring a time-series of averaged IRIS images
-import ij.IJ;
 import ij.*;
+import ij.IJ;
+import ij.ImagePlus;
+import ij.plugin.ZProjector;
 // addClassPath("C:/_instrument files/IRIS-API/");
+
 addClassPath("/Users/derin/IRIS software/IRIS-API/");
 importCommands("Acquisition scripts/");
 
 configName = "LEDs";
 String[] channels = new String[] {"Blue", "Green", "Yellow", "Red"};
-nFrames = 16; // average 32 frames for each channel
+nFrames = 4; // average 32 frames for each channel
 
 irisAcq = IrisAcquisitions();
 
 
-deltaT = 5; // time in seconds between acquisitions
-exptT = 20*1; // tota acquisition/experiment time in seconds, e.g. 1 minute
+deltaT = 3; // time in seconds between acquisitions
+exptT = 10; // Acquisition time in seconds
 timepoints = new ArrayList();
 
 
+
+
+
 // 4 channels, 1 z-slice
-frames = IJ.createHyperStack("Frames", irisAcq.width, irisAcq.height, 4, 1, 1, irisAcq.bitDepth);
+// frames = IJ.createHyperStack("Frames", irisAcq.width, irisAcq.height, 4, 1, 1, irisAcq.bitDepth);
 
 running = true;
-startT = System.currentTimeMillis()/1000.0;
-while (running){
-	timeNow = System.currentTimeMillis()/1000.0;
+startTime = System.currentTimeMillis()/1000.0;
+myTime = startTime;
 
+while (running){
 	// Acquire a multicolor image and add it to the hyperstack
 	thisImp = irisAcq.multiChannel(configName, channels, nFrames);
-	for(int k=1; k<5; k++){
-		frames.getStack().addSlice( thisImp.getStack().getProcessor(k) );
-	}
+	// for(int k=1; k<5; k++){
+	// 	frames.getStack().addSlice( thisImp.getStack().getProcessor(k) );
+	// }
 	thisImp.show();
-	// Check if experiment is over, and wait for next timepoint.
-	elapsedT = timeNow-startT;
-	running = elapsedT < exptT;
-	if ( elapsedT < deltaT){
 
+	// Check if experiment is over, and wait for next timepoint.
+	myTime = System.currentTimeMillis()/1000.0-startTime;
+	timepoints.add(myTime);
+	running = myTime < exptT;
+	targetTime = startTime + deltaT*timepoints.size();
+	while ( System.currentTimeMillis()/1000.0 < targetTime){
 		Thread.sleep(100);
-		elapsedT = System.currentTimeMillis()/1000.0;
-	}
+	}	
 }
+print(timepoints)
