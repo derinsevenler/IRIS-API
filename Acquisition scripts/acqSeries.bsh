@@ -16,27 +16,29 @@ irisAcq = IrisAcquisitions();
 
 
 deltaT = 3; // time in seconds between acquisitions
-exptT = 10; // Acquisition time in seconds
+exptT = 8; // Acquisition time in seconds
 timepoints = new ArrayList();
 
+store = mm.data().createRAMDatastore();
+disp = mm.displays().createDisplay(store);
 
+coordsBuilder = mm.data().getCoordsBuilder();
+metaBuilder = mm.data().getMetadataBuilder();
 
-
-
-// 4 channels, 1 z-slice
-// frames = IJ.createHyperStack("Frames", irisAcq.width, irisAcq.height, 4, 1, 1, irisAcq.bitDepth);
 
 running = true;
 startTime = System.currentTimeMillis()/1000.0;
-myTime = startTime;
 
 while (running){
 	// Acquire a multicolor image and add it to the hyperstack
 	thisImp = irisAcq.multiChannel(configName, channels, nFrames);
-	// for(int k=1; k<5; k++){
-	// 	frames.getStack().addSlice( thisImp.getStack().getProcessor(k) );
-	// }
-	thisImp.show();
+	myTime = System.currentTimeMillis()/1000.0-startTime;
+	for(int k=1; k<5; k++){
+		myCoords = coordsBuilder.time(timepoints.size()).channel(k-1).build();
+		myMeta = metaBuilder.bitDepth(16).elapsedTimeMs(myTime*1000.0).build();
+		thisImg = mm.data().createImage(thisImp.getStack().getProcessor(k).getPixels(), (int)irisAcq.width, (int)irisAcq.height,thisImg.getBytesPerPixel(),1,myCoords, myMeta);
+		store.putImage(thisImg);
+	}
 
 	// Check if experiment is over, and wait for next timepoint.
 	myTime = System.currentTimeMillis()/1000.0-startTime;
@@ -47,4 +49,5 @@ while (running){
 		Thread.sleep(100);
 	}	
 }
-print(timepoints)
+mm.displays().manage(store);
+print("DONE");

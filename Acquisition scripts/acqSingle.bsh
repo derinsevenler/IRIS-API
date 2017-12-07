@@ -10,4 +10,11 @@ importCommands("Acquisition scripts/");
 
 irisAcq = IrisAcquisitions();
 thisImg = irisAcq.multiFrame(4); // average 16 frame
-thisImg.show();
+
+store = mm.data().createRAMDatastore();
+mm.displays().createDisplay(store);
+coordsBuilder = mm.data().getCoordsBuilder().z(0).channel(0).stagePosition(0);
+myMeta = mm.data().getMetadataBuilder().bitDepth(16).build();
+
+image = mm.data().createImage(thisImg.getProcessor().getPixels(), (int)irisAcq.width, (int)irisAcq.height,thisImg.getBytesPerPixel(),1,coordsBuilder.time(0).build(), myMeta);
+store.putImage(image);
