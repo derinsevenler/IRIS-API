@@ -1,10 +1,7 @@
 // Functions for performing acquisitions for IRIS
 
-
-
 IrisAcquisitions() {
 	// Several acquisition methods for IRIS
-
 
 	int width = mmc.getImageWidth();
 	int height = mmc.getImageHeight();

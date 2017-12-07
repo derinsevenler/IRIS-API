@@ -1,0 +1,28 @@
+// Example script for an acquisition with menus
+
+import ij.*;
+import ij.IJ;
+import ij.ImagePlus;
+import ij.plugin.ZProjector;
+import ij.gui.*; 
+import java.text.DecimalFormat;
+
+// addClassPath("C:/_instrument files/IRIS-API/");
+addClassPath("/Users/derin/IRIS software/IRIS-API/");
+importCommands("Acquisition scripts/");
+
+irisAcq = IrisAcquisitions();
+irisP = IrisPanels();
+
+// if (irisP.showPopup("yo")){
+// 	print("Cancel was clicked.");
+// } else {
+// 	print("OK was clicked.");
+// }
+
+panelObject = irisP.makeProgressPanel();
+while (!panelObject.didCancel){
+	Thread.sleep(500);
+}
+panelObject.frame.setVisible(false);
+panelObject.frame.dispose();

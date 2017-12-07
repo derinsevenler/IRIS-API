@@ -1,0 +1,116 @@
+// Functions that generate interactive panels 
+
+IrisPanels() {
+	showPopup(String notificationText){
+		thingy = 5;
+		GenericDialog gd = new GenericDialog("IRIS Notification");
+		gd.addMessage(notificationText);
+		gd.addMessage("");
+		gd.showDialog();
+		return gd.wasCanceled();
+	}
+	
+	makeProgressPanel(){
+		// Make a frame to hold everything
+		JFrame frame = new JFrame("Acquisition Progress");
+		Font boldFont = new Font("Deja Vu MS", Font.BOLD, 14);
+		Font normalFont = new Font("Deja Vu MS", Font.PLAIN, 14);
+
+		// Info panel: show acquisition time, experiment name and number of acquired frames
+		GridLayout layout = new GridLayout(0, 2, 5, 0); // two columns and as many rows as necesary
+		JPanel infoPanel = new JPanel();
+		infoPanel.setLayout(layout);
+		elapsedTimeIndicator = new JLabel("00:00", SwingConstants.RIGHT);
+		elapsedTimeIndicator.setFont(boldFont);
+		frameIndicator = new JLabel("0", SwingConstants.RIGHT);
+		frameIndicator.setFont(boldFont);
+		timeLabel = new JLabel("Elapsed time:");
+		timeLabel.setFont(normalFont);
+		frameLabel = new JLabel("Frames acquired:");
+		frameLabel.setFont(normalFont);
+		infoPanel.add(timeLabel);
+		infoPanel.add(elapsedTimeIndicator);
+		infoPanel.add(frameLabel);
+		infoPanel.add(frameIndicator);
+		infoPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		frame.getContentPane().add(infoPanel, BorderLayout.NORTH);
+
+
+		// new Thread to update the clock
+		shoultCount = false;
+		int_sec = 0;
+		int_min = 0;
+		// Stolen from https://stackoverflow.com/questions/18926839/timer-stopwatch-gui#18926890
+		// and http://beanshell.org/manual/interfaces.html
+		clockThread(){
+			DecimalFormat df = new DecimalFormat("00");
+			run() {
+				long now = System.currentTimeMillis();
+				while(true){
+					if(System.currentTimeMillis()-now>=1000){
+						now=System.currentTimeMillis();
+						int_sec++;
+						if(int_sec>=60){
+							int_sec=1;
+							int_min++;
+						}
+						print(int_sec);
+						elapsedTimeIndicator.setText(df.format(int_min) + ":" + df.format(int_sec));
+					}
+				}
+			}
+			return this;
+		}
+		ct = clockThread();
+		new Thread( ct ).start();
+
+		// Bottom panel: 'Pause' and 'Stop' buttons in buttonPanel as well as a section for notifications.
+		JPanel botPanel = new JPanel(); //bottom panel
+		botPanel.setLayout(new GridLayout(0,1,0,0));
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new GridLayout(1,2,20,20));
+		JButton pauseButton = new JButton("Pause");
+		isPaused = false;
+		pauseButton.addActionListener(new ActionListener() {
+			actionPerformed (e) {
+				isPaused = !isPaused;
+				if (isPaused){
+					notification.setText("Acqusition paused");
+					pauseButton.setText("Resume");
+				} else {
+					notification.setText("Acqusition paused");
+					pauseButton.setText("Pause");
+				}
+				
+				
+			}
+		});
+		buttonPanel.add(pauseButton);
+		JButton cancelButton = new JButton("Cancel");
+		didCancel = false;
+		cancelButton.addActionListener(new ActionListener() {
+			actionPerformed (e) {
+				didCancel = true;
+				notification.setText("Cancelling, please wait...");
+				pauseButton.setEnabled(false);
+			}
+		});
+		buttonPanel.add(cancelButton);
+		JLabel notification = new JLabel("Acquiring", SwingConstants.CENTER);
+		notification.setFont(boldFont);
+
+		botPanel.add(buttonPanel);
+		botPanel.add(notification);
+		frame.getContentPane().add(botPanel, BorderLayout.SOUTH);
+
+		// Display the frame
+		frame.pack();
+		frame.setSize(300, 200);
+		frame.setLocation(100,100);
+		frame.setVisible(true);
+		frame.setResizable(false);
+		return this;
+	}
+	
+	return this;
+}
