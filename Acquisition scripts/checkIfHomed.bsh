@@ -1,0 +1,34 @@
+// Example script to check if stages are homed.
+
+import ij.*;
+import ij.IJ;
+import ij.ImagePlus;
+import ij.plugin.ZProjector;
+import ij.gui.*; 
+import java.text.DecimalFormat;
+
+// If the stages have *not* been homed, then one of them will be at position 0.
+
+xPos = mmc.getXYStagePosition().getX();
+yPos = mmc.getXYStagePosition().getY();
+zPos = mmc.getPosition();
+
+if ( (Math.abs(xPos) < 1) || (Math.abs(yPos) < 1) || (Math.abs(zPos) < 1) ){
+	GenericDialog gd = new GenericDialog("DO NOT CONTINUE");
+	gd.addMessage("DO NOT CONTINUE");
+	gd.addMessage("The positioning stage has not been homed.");
+	gd.addMessage("");
+	gd.addMessage("Remember to REMOVE THE OBJECTIVE before performing the homing procedure.");
+	gd.addMessage("Failure to do so will damage the instrument.");
+	gd.showDialog();
+
+	if (!gd.wasCanceled() || gd.wasCanceled()){
+		GenericDialog gd = new GenericDialog("DO NOT CONTINUE");
+		gd.addMessage("Seriously! The stages must be homed to continue.");
+		gd.showDialog();
+	}
+} else {
+	GenericDialog gd = new GenericDialog("IRIS Acquisition");
+	gd.addMessage("Staged are homed, instrument is ready.");
+	gd.showDialog();
+}
