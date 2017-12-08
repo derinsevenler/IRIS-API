@@ -1,0 +1,57 @@
+// This is the main 'run' script for IRIS acquisition
+// It handles most of the logic of switching between different panels/acquisition modes.
+// 
+// Derin Sevenler, Boston University 2017
+// derin@bu.edu
+
+import ij.*;
+import ij.IJ;
+import ij.ImagePlus;
+import ij.plugin.ZProjector;
+import ij.gui.*; 
+import java.text.DecimalFormat;
+
+// addClassPath("C:/_instrument files/IRIS-API/");
+addClassPath("/Users/derin/IRIS software/IRIS-API/");
+importCommands("Acquisition scripts/");
+
+irisAcq = IrisAcquisitions();
+irisPanels = IrisPanels();
+irisMotion = IrisMotion();
+
+// 1. Start-up: load a chip if necessary
+helloPanel = irisPanels.makeHelloPanel();
+while (helloPanel.selection.equals(""))
+	Thread.sleep(100);
+helloPanel.frame.setVisible(false);
+helloPanel.frame.dispose();
+if (irisPanels.didCancel)
+	return false;
+
+if (helloPanel.selection.equals("loadChip")){
+	irisMotion.moveToLoad();
+	mmc.waitForSystem();
+	loadChipPanel = irisPanels.makeLoadChipPanel();
+	while (loadChipPanel.loading) {
+		// Wait to finish loading chip
+		Thread.sleep(100);
+		if (irisPanels.didCancel)
+			break;
+	}
+	loadChipPanel.frame.setVisible(false);
+	loadChipPanel.frame.dispose();
+	if (irisPanels.didCancel)
+		break;
+} 
+if (irisPanels.didCancel)
+	return false;
+
+// Move to camera station
+irisMotion.moveToCamera();
+mmc.waitForSystem();
+
+// 2. Acquisition preparation:
+// Get in focus
+// 
+
+// 3. Acquisition 

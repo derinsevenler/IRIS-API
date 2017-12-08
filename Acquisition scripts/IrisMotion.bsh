@@ -1,0 +1,29 @@
+// Scripts to control motion of stages.
+// Stage positions are hard-coded in this file.
+// DO NOT EDIT THESE NUMBERS unless you know what you are doing!
+// improper values can cause damage to the instrument.
+
+IrisMotion(){
+
+	loadX = 0;
+	loadY = 0;
+	loadZ = 0;
+
+	imageX = 0;
+	imageY = 0;
+	imageZ = 0;
+
+	moveToLoad(){
+		print("moving to loading position");
+		mmc.setXYPosition( loadX, loadY );
+		mmc.setPosition( loadZ );
+	}
+
+	moveToCamera(){
+		print("moving to camera station");
+		mmc.setXYPosition( imageX, imageY );
+		mmc.setPosition( imageZ );
+	}
+
+	return this;
+}

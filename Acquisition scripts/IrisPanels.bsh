@@ -1,6 +1,8 @@
 // Functions that generate interactive panels 
 
 IrisPanels() {
+
+	didCancel = false;
 	showPopup(String notificationText){
 		thingy = 5;
 		GenericDialog gd = new GenericDialog("IRIS Notification");
@@ -88,7 +90,6 @@ IrisPanels() {
 		});
 		buttonPanel.add(pauseButton);
 		JButton cancelButton = new JButton("Cancel");
-		didCancel = false;
 		cancelButton.addActionListener(new ActionListener() {
 			actionPerformed (e) {
 				didCancel = true;
@@ -113,8 +114,113 @@ IrisPanels() {
 		return this;
 	}
 
+	makeHelloPanel(){
+		// Prompt the user whether to load chip or go straight to acquisition.
+
+		buttonFont = new Font("Deja Vu MS", Font.BOLD, 16);
+		JButton loadChipButton = new JButton("Load or unload an IRIS chip");
+		loadChipButton.setFont(buttonFont);
+		JButton proceedButton = new JButton("Proceed to experiment");
+		proceedButton.setFont(buttonFont);
+		JButton cancelButton = new JButton("Cancel");
+		cancelButton.setFont(buttonFont);
+
+		selection = "";
+		loadChipButton.addActionListener(new ActionListener() {
+			actionPerformed (e) {
+				selection = "loadChip";
+				notification.setText("Moving to load chip position...");
+				loadChipButton.setEnabled(false);
+				proceedButton.setEnabled(false);
+			}
+		});
+		proceedButton.addActionListener(new ActionListener() {
+			actionPerformed (e) {
+				selection = "proceed";
+				notification.setText("Moving to imaging position...");
+				loadChipButton.setEnabled(false);
+				proceedButton.setEnabled(false);
+			}
+		});
+		cancelButton.addActionListener(new ActionListener() {
+			actionPerformed (e) {
+				didCancel = true;
+				selection = "cancel";
+				notification.setText("Cancelling, please wait...");
+				pauseButton.setEnabled(false);
+			}
+		});
+
+		// Build the GUI and add Text and buttons
+		JFrame frame = new JFrame("IRIS Acquisition");
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridLayout(0, 1, 0, 30)); // One simple column
+
+		helloText= new JLabel("IRIS Acquisiton Application");
+		helloText.setFont(new Font("Deja Vu MS", Font.BOLD, 16));
+		infoText = new JLabel("Select an option. Stage may move!");
+		infoText.setFont(new Font("Deja Vu MS", Font.PLAIN, 16));
+		panel.add(infoText);
+		panel.add(loadChipButton);
+		panel.add(proceedButton);
+		panel.add(cancelButton);
+		frame.getContentPane().add(panel, BorderLayout.NORTH);
+
+		// Display the frame
+		frame.pack();
+		frame.setSize(400, 300);
+		// frame.setLocation(100,100);
+		frame.setLocationRelativeTo(null); // center of display
+		frame.setVisible(true);
+		frame.setResizable(false);
+
+		return this;
+	}
+
+	makeLoadChipPanel(){
+		// A dialog box for loading the chip.
+
+		infoText = new JLabel("Load chip.");
+		infoText.setFont(new Font("Deja Vu MS", Font.PLAIN, 16));
+
+		buttonFont = new Font("Deja Vu MS", Font.BOLD, 16);
+		JButton finishedLoadingButton = new JButton("Proceed to acquisition");
+		finishedLoadingButton.setFont(buttonFont);
+		JButton cancelButton = new JButton("Cancel");
+		cancelButton.setFont(buttonFont);
+
+		finishedLoadingButton.addActionListener(new ActionListener() {
+			actionPerformed (e) {
+				loading = false;
+			}
+		});
+		cancelButton.addActionListener(new ActionListener() {
+			actionPerformed (e) {
+				didCancel = true;
+			}
+		});
+
+		loading = true;
+
+		JFrame frame = new JFrame("IRIS Acquisition");
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridLayout(0, 1, 0, 30)); // One simple column
+		panel.add(infoText);
+		panel.add(finishedLoadingButton);
+		panel.add(cancelButton);
+		frame.getContentPane().add(panel, BorderLayout.NORTH);
+		frame.pack();
+		frame.setSize(400, 200);
+		frame.setLocationRelativeTo(null); // center of display
+		frame.setVisible(true);
+		frame.setResizable(false);
+
+		return this;
+	}
+
 	makeConfigPanel(){
-		// A dialog box to configure the acquisition.
+		// A dialog box for acquisition configuration.
 	}
 	
 	return this;
