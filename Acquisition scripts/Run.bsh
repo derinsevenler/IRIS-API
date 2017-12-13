@@ -11,8 +11,8 @@ import ij.plugin.ZProjector;
 import ij.gui.*; 
 import java.text.DecimalFormat;
 
-// addClassPath("C:/_instrument files/IRIS-API/");
-addClassPath("/Users/derin/IRIS software/IRIS-API/");
+ addClassPath("C:/_instrument files/IRIS-API/");
+//addClassPath("/Users/derin/IRIS software/IRIS-API/");
 importCommands("Acquisition scripts/");
 
 irisAcq = IrisAcquisitions();

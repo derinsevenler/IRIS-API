@@ -1,5 +1,5 @@
 // Example script to check if stages are homed.
-
+// Copy this into the file C:\Program Files\Micro-Manager-2.0beta\MMStartup.bsh
 import ij.*;
 import ij.IJ;
 import ij.ImagePlus;
@@ -12,23 +12,35 @@ import java.text.DecimalFormat;
 xPos = mmc.getXYStagePosition().getX();
 yPos = mmc.getXYStagePosition().getY();
 zPos = mmc.getPosition();
+systemHomed = false;
 
 if ( (Math.abs(xPos) < 1) || (Math.abs(yPos) < 1) || (Math.abs(zPos) < 1) ){
+	systemHomed = false;
 	GenericDialog gd = new GenericDialog("DO NOT CONTINUE");
 	gd.addMessage("DO NOT CONTINUE");
-	gd.addMessage("The positioning stage has not been homed.");
+	gd.addMessage("The stage has not been homed.");
 	gd.addMessage("");
-	gd.addMessage("Remember to REMOVE THE OBJECTIVE before performing the homing procedure.");
+	gd.addMessage("1. Move to 'LOAD CHIP position'.");
+	gd.addMessage("2. Remove the objective lens by hand.");
+	gd.addMessage("3. Close Micro-manager, and open the 'Kinesis' application.");
+	gd.addMessage("4. Click 'Home' button on all three stage devices. Wait until all positions read 0.");
+	gd.addMessage("5. Set position of all three stages to 50 mm with Move >> Position >> 50, then close Kinesis.")
+	gd.addMessage("6. Close Kinesis.")
+	gd.addMessage("7. Start Micro-manager.");
+	gd.addMessage("");
+	gd.addMessage("Remember to REMOVE THE OBJECTIVE before performing the homing procedure!");
 	gd.addMessage("Failure to do so will damage the instrument.");
 	gd.showDialog();
 
 	if (!gd.wasCanceled() || gd.wasCanceled()){
 		GenericDialog gd = new GenericDialog("DO NOT CONTINUE");
-		gd.addMessage("Seriously! The stages must be homed to continue.");
+		gd.addMessage("Seriously! Do not attempt acquisition without homing the stages first.");
 		gd.showDialog();
 	}
 } else {
+	systemHomed = true;
 	GenericDialog gd = new GenericDialog("IRIS Acquisition");
-	gd.addMessage("Staged are homed, instrument is ready.");
+	gd.addMessage("Staged are homed, instrument is ready!");
 	gd.showDialog();
 }
+

@@ -1,10 +1,11 @@
 // example movement script
+import ij.gui.*;
 addClassPath("C:/_instrument files/IRIS-API/");
 // addClassPath("/Users/derin/IRIS software/IRIS-API/");
 importCommands("Acquisition scripts/");
 irisMotion = IrisMotion();
 
-irisMotion.moveToCamera();
-print("At Camera");
-Thread.sleep(5*1000);
+//irisMotion.moveToCamera();
+//print("At Camera");
+//Thread.sleep(5*1000);
 irisMotion.moveToLoad();

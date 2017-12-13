@@ -13,22 +13,53 @@ IrisMotion(){
 	imageY = 7000;
 	imageZ = 43400;
 
+	movingDlg(){
+		JFrame frame = new JFrame("Stage in motion");
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridLayout(0, 1,0,0));
+		Font boldFont = new Font("Deja Vu MS", Font.BOLD, 16);
+
+		label = new JLabel("Stage is in motion!", SwingConstants.CENTER);
+		label.setFont(boldFont);
+		panel.add(label);
+		panel.add(new JLabel(""));
+		label = new JLabel("This box will close automatically when motion is complete.", SwingConstants.CENTER);
+		label.setFont(boldFont);
+		panel.add(label);
+		
+		frame.getContentPane().add(panel, BorderLayout.NORTH);
+		frame.pack();
+		frame.setSize(800, 400);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+		frame.setResizable(false);
+		return this;
+	}
+
 	moveToLoad(){
-		print("moving to loading position");
+		dlg = movingDlg();
+
 		mmc.setPosition( loadZ );
 		Thread.sleep(5*1000);
 		mmc.setXYPosition( loadX, loadY );
 		Thread.sleep(20*1000);
+
+		dlg.frame.setVisible(false);
+		dlg.frame.dispose();
 	}
 
 	moveToCamera(){
-		print("moving to camera station");
+		dlg = movingDlg();
+
 		mmc.setPosition( loadZ );
 		Thread.sleep(5*1000);
 		mmc.setXYPosition( imageX, imageY );
 		Thread.sleep(20*1000);
 		mmc.setPosition( imageZ );
 		Thread.sleep(5*1000);
+
+		dlg.frame.setVisible(false);
+		dlg.frame.dispose();
 	}
 
 	return this;

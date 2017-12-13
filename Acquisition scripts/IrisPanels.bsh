@@ -108,7 +108,7 @@ IrisPanels() {
 		// Display the frame
 		frame.pack();
 		frame.setSize(300, 200);
-		frame.setLocation(100,100);
+		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		frame.setResizable(false);
 		return this;
@@ -118,10 +118,11 @@ IrisPanels() {
 		// Prompt the user whether to load chip or go straight to acquisition.
 
 		buttonFont = new Font("Deja Vu MS", Font.BOLD, 16);
-		JButton loadChipButton = new JButton("Load or unload an IRIS chip");
+		JButton loadChipButton = new JButton("Move to LOAD position");
 		loadChipButton.setFont(buttonFont);
-		JButton proceedButton = new JButton("Proceed to experiment");
+		JButton proceedButton = new JButton("Move to ACQUISITION position");
 		proceedButton.setFont(buttonFont);
+		finishedLoadingButton.setEnabled(systemHomed);
 		JButton cancelButton = new JButton("Cancel");
 		cancelButton.setFont(buttonFont);
 
@@ -181,12 +182,16 @@ IrisPanels() {
 	makeLoadChipPanel(){
 		// A dialog box for loading the chip.
 
-		infoText = new JLabel("Load chip.");
+		infoText = new JLabel("Load chip, or change objective lens.", SwingConstants.CENTER);
 		infoText.setFont(new Font("Deja Vu MS", Font.PLAIN, 16));
+
+		warningText = new JLabel("DO NOT proceed to acqusition unless stages are homed.", SwingConstants.CENTER);
+		warningText.setFont(new Font("Deja Vu MS", Font.BOLD, 16));
 
 		buttonFont = new Font("Deja Vu MS", Font.BOLD, 16);
 		JButton finishedLoadingButton = new JButton("Proceed to acquisition");
 		finishedLoadingButton.setFont(buttonFont);
+		finishedLoadingButton.setEnabled(systemHomed);
 		JButton cancelButton = new JButton("Cancel");
 		cancelButton.setFont(buttonFont);
 
