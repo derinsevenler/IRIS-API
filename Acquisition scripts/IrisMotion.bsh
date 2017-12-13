@@ -5,24 +5,30 @@
 
 IrisMotion(){
 
-	loadX = 0;
-	loadY = 0;
-	loadZ = 0;
+	loadX = 50000;
+	loadY = 50000;
+	loadZ = 50000;
 
-	imageX = 0;
-	imageY = 0;
-	imageZ = 0;
+	imageX = 31000;
+	imageY = 7000;
+	imageZ = 43400;
 
 	moveToLoad(){
 		print("moving to loading position");
-		mmc.setXYPosition( loadX, loadY );
 		mmc.setPosition( loadZ );
+		Thread.sleep(5*1000);
+		mmc.setXYPosition( loadX, loadY );
+		Thread.sleep(20*1000);
 	}
 
 	moveToCamera(){
 		print("moving to camera station");
+		mmc.setPosition( loadZ );
+		Thread.sleep(5*1000);
 		mmc.setXYPosition( imageX, imageY );
+		Thread.sleep(20*1000);
 		mmc.setPosition( imageZ );
+		Thread.sleep(5*1000);
 	}
 
 	return this;
