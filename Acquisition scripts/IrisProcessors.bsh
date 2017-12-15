@@ -1,0 +1,21 @@
+// Functions that change the image processor pipeline
+
+IrisProcessors(){
+
+	setForAcquisition(){
+		mm.data().clearPipeline();
+	}
+
+	setForLive(){
+		mm.data().clearPipeline();
+		
+		flipper = processors.get("org.micromanager.imageflipper.FlipperPlugin");
+
+		// https://github.com/micro-manager/micro-manager/blob/mm2/plugins/ImageFlipper/src/main/java/org/micromanager/imageflipper/FlipperConfigurator.java
+		settingsBuilder = mm.data().getPropertyMapBuilder();
+		settingsBuilder.putString("camera", mmc.getCameraDevice()).putInt("rotation", 180).putBoolean("shouldMirror", false).putBoolean()
+		config = flipper.createConfigurator(settingsBuilder.build());
+		mm.data().addConfiguredProcessor(config, flipper);
+		config.cleanup();
+	}
+}

@@ -18,6 +18,7 @@ importCommands("Acquisition scripts/");
 irisAcq = IrisAcquisitions();
 irisPanels = IrisPanels();
 irisMotion = IrisMotion();
+irisProcessors = IrisProcessors();
 
 // 1. Start-up: load a chip if necessary
 helloPanel = irisPanels.makeHelloPanel();
@@ -51,7 +52,16 @@ irisMotion.moveToCamera();
 mmc.waitForSystem();
 
 // 2. Acquisition preparation:
-// Get in focus
-// 
+// -- User must move stage to acqusition position and get in focus
+// Turn on live
+irisProcessors.setForLive();
+mm.live().setLiveMode(true);
+
+// Turn on hand tool
+mm.app().updateCenterAndDragListener(true);
+focusPanel = irisPanels.makeFocusPanel();
+
+
+
 
 // 3. Acquisition 
