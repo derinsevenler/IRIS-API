@@ -19,7 +19,7 @@ IrisMotion(){
 		panel.setLayout(new GridLayout(0, 1,0,0));
 		Font boldFont = new Font("Deja Vu MS", Font.BOLD, 16);
 
-		label = new JLabel("Stage is in motion!", SwingConstants.CENTER);
+		label = new JLabel("Stage is in motion! (30 seconds)", SwingConstants.CENTER);
 		label.setFont(boldFont);
 		panel.add(label);
 		panel.add(new JLabel(""));

@@ -4,6 +4,7 @@ IrisProcessors(){
 
 	setForAcquisition(){
 		mm.data().clearPipeline();
+		mm.app().getPipelineFrame().dispose();
 	}
 
 	setForLive(){
@@ -13,9 +14,14 @@ IrisProcessors(){
 
 		// https://github.com/micro-manager/micro-manager/blob/mm2/plugins/ImageFlipper/src/main/java/org/micromanager/imageflipper/FlipperConfigurator.java
 		settingsBuilder = mm.data().getPropertyMapBuilder();
-		settingsBuilder.putString("camera", mmc.getCameraDevice()).putInt("rotation", 180).putBoolean("shouldMirror", false).putBoolean()
+		settingsBuilder.putString("camera", mmc.getCameraDevice()).putInt("rotation", 180).putBoolean("shouldMirror", false);
 		config = flipper.createConfigurator(settingsBuilder.build());
 		mm.data().addConfiguredProcessor(config, flipper);
+		
+		// Hide the actual panels
 		config.cleanup();
+		mm.app().getPipelineFrame().dispose();
 	}
+
+	return this;
 }

@@ -39,7 +39,6 @@ IrisPanels() {
 
 
 		// Simple self-contained clock, for easy reference
-		shoultCount = false;
 		int_sec = 0;
 		int_min = 0;
 		// Stolen from https://stackoverflow.com/questions/18926839/timer-stopwatch-gui#18926890
@@ -122,7 +121,6 @@ IrisPanels() {
 		loadChipButton.setFont(buttonFont);
 		JButton proceedButton = new JButton("Move to ACQUISITION position");
 		proceedButton.setFont(buttonFont);
-		finishedLoadingButton.setEnabled(systemHomed);
 		JButton cancelButton = new JButton("Cancel");
 		cancelButton.setFont(buttonFont);
 
@@ -191,7 +189,6 @@ IrisPanels() {
 		buttonFont = new Font("Deja Vu MS", Font.BOLD, 16);
 		JButton finishedLoadingButton = new JButton("Proceed to acquisition");
 		finishedLoadingButton.setFont(buttonFont);
-		finishedLoadingButton.setEnabled(systemHomed);
 		JButton cancelButton = new JButton("Cancel");
 		cancelButton.setFont(buttonFont);
 
@@ -224,9 +221,46 @@ IrisPanels() {
 		return this;
 	}
 
-	makeConfigPanel(){
-		// A dialog box for acquisition configuration.
+	makeAdjustmentPanel(){
+		text1 = new JLabel("Adjust chip position.", SwingConstants.CENTER);
+		text1.setFont(new Font("Deja Vu MS", Font.PLAIN, 16));
+		text2 = new JLabel("You can use the stage control panel, or", SwingConstants.CENTER);
+		text2.setFont(new Font("Deja Vu MS", Font.PLAIN, 16));
+		text3 = new JLabel("click and drag on the image.", SwingConstants.CENTER);
+		text3.setFont(new Font("Deja Vu MS", Font.PLAIN, 16));
+
+		continueButton = new JButton("Continue");
+		clicked = false;
+		continueButton.addActionListener(new ActionListener() {
+			actionPerformed (e) {
+				clicked = true;
+			}
+		});
+
+		panel = new JPanel();
+		panel.setLayout(new GridLayout(0, 1, 0, 30));
+		panel.add(text1);
+		panel.add(text2);
+		panel.add(text3);
+		panel.add(continueButton);
+		JFrame frame = new JFrame("Adjust position");
+		frame.getContentPane().add(panel, BorderLayout.NORTH);
+		frame.pack();
+		frame.setSize(400, 200);
+		frame.setLocationRelativeTo(null); // center of display
+		frame.setVisible(true);
+		frame.setResizable(false);
+
+		return this;
 	}
+
+	makeChipInfoPanel(){
+		chipTypeBox = new JComboBox()
+
+		return this;
+	}
+
+
 	
 	return this;
 }

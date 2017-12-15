@@ -10,9 +10,19 @@ import ij.ImagePlus;
 import ij.plugin.ZProjector;
 import ij.gui.*; 
 import java.text.DecimalFormat;
+import org.micromanager.internal.dialogs.StageControlFrame;
+import mmcorej.DeviceType;
 
- addClassPath("C:/_instrument files/IRIS-API/");
-//addClassPath("/Users/derin/IRIS software/IRIS-API/");
+// Magic numbers for stage control 
+smallMoveX = 25;
+mediumMoveX= 250;
+largeMoveX = 1000;
+smallMoveZ = 10;
+mediumMoveZ = 100;
+
+
+// addClassPath("C:/_instrument files/IRIS-API/");
+addClassPath("/Users/derin/IRIS software/IRIS-API/");
 importCommands("Acquisition scripts/");
 
 irisAcq = IrisAcquisitions();
@@ -51,17 +61,49 @@ if (irisPanels.didCancel)
 irisMotion.moveToCamera();
 mmc.waitForSystem();
 
-// 2. Acquisition preparation:
-// -- User must move stage to acqusition position and get in focus
-// Turn on live
+// 2. Acquisition setup
+// --------------------
+
+// 2.1: Get info about chip
+infoPanel = irisPanels.makeChipInfoPanel();
+while (!infopanel.submitted)
+	Thread.sleep(100);
+
+
+// 2.2: Move to correct position while chip is dry
+
+// Turn on live, hand tool, and open stage control frame and custom focus panel
 irisProcessors.setForLive();
 mm.live().setLiveMode(true);
-
-// Turn on hand tool
 mm.app().updateCenterAndDragListener(true);
-focusPanel = irisPanels.makeFocusPanel();
+
+// Go into user profile to make sure the step sizes are Ok
+StageControlFrame.dispose();
+userProfile = mm.app().getUserProfile();
+// XY
+//  getter looks like: mm.app().getUserProfile().getDouble(StageControlFrame.class, "SMALLMOVEMENT", -1);
+userProfile.setDouble(StageControlFrame.class,"SMALLMOVEMENT",smallMoveX);
+userProfile.setDouble(StageControlFrame.class,"MEDIUMMOVEMENT",mediumMoveX);
+userProfile.setDouble(StageControlFrame.class,"LARGEMOVEMENT",largeMoveX);
+// Z
+// getter looks like: mm.app().getUserProfile().getDouble(StageControlFrame.class, "SMALLMOVEMENTZ" + mmc.getLoadedDevicesOfType(DeviceType.StageDevice).get(0), -1);
+userProfile.setDouble(StageControlFrame.class,"SMALLMOVEMENTZ" + mmc.getLoadedDevicesOfType(DeviceType.StageDevice).get(0), smallMoveZ);
+StageControlFrame.showStageControl();
 
 
+adjustPanel = irisPanels.makeAdjustmentPanel();
+// Wait for user to click continue
+while (!adjustPanel.clicked)
+	Thread.sleep(100);
 
 
-// 3. Acquisition 
+// 2.35: Acquire a mirror image here
+// 2.3: Flow blank solution. Ensure correct focus.
+
+
+// 2.4: Acquire a wet 'pre' image, for normalization.
+
+// 3. Acquisition proper
+
+
+print("Finished");
