@@ -21,8 +21,8 @@ smallMoveZ = 10;
 mediumMoveZ = 100;
 
 
-// addClassPath("C:/_instrument files/IRIS-API/");
-addClassPath("/Users/derin/IRIS software/IRIS-API/");
+addClassPath("C:/_instrument files/IRIS-API/");
+// addClassPath("/Users/derin/IRIS software/IRIS-API/");
 importCommands("Acquisition scripts/");
 
 irisAcq = IrisAcquisitions();
