@@ -1,6 +1,11 @@
 // Micro-manager acquisition script for acquiring a 'mirror' file
+import ij.*;
+import ij.IJ;
+import ij.ImagePlus;
+import ij.plugin.ZProjector;
 
 addClassPath("C:/_instrument files/IRIS-API/");
+// addClassPath("/Users/derin/IRIS software/IRIS-API/");
 importCommands("Acquisition scripts/");
 
 configName = "LEDs";
@@ -8,34 +13,41 @@ String[] channels = new String[] {"Blue", "Green", "Yellow", "Red"};
 
 irisAcq = IrisAcquisitions();
 
-nPosX = 2;
-nPosY = 2;
-nFrames = 16; // average 16 frames for each channel
-delta = 200; // microns
+nPosX = 5;
+nPosY = 5;
+nFrames = 16; // average 16 frames for each channel, at each position
+delta = 50; // microns
 
-// A hyperstack to hold our frames in memory
-mirrorStack = ij.createHyperStack("Mirror", irisAcq.width, irisAcq.height, 4, 1, (nPosX*nPosY), irisAcq.bitDepth);
+// A datastore to hold our frames in memory
+store = mm.data().createRAMDatastore();
+display = mm.displays().createDisplay(store);
+coordsBuilder = mm.data().getCoordsBuilder();
+myMeta = mm.data().getMetadataBuilder().bitDepth(16).build();
 
+
+startX = mmc.getXYStagePosition().getX();
+startY = mmc.getXYStagePosition().getY();
 for (int x=0; x<nPosX; x++){
-	thisX = starX + delta*x;
-	mmc.setXYPosition(thisX, thisY);
+	thisX = startX + delta*x;
+	mmc.setXYPosition(thisX, startY);
 	mmc.sleep(1000);
 	for (int y=0; y<nPosY; y++){
-		thisY = starY + delta*y;
+		thisY = startY + delta*y;
 		mmc.setXYPosition(thisX, thisY);
 		mmc.sleep(1000);
 
 		thisImp = irisAcq.multiChannel(configName, channels, nFrames);
-		for(int k=1; k<5; k++){
-			mirrorStack.getStack.setProcessor( thisImp.getProcessor(k), (1+x+nPosX*y) );
+		for(int k=0; k<4; k++){
+			myPixels = thisImp.getStack().getProcessor(k+1).getPixels();
+			// hijack the 'z' position for simple projection
+			myCoords = coordsBuilder.channel(k).z(y + nPosY*x).build();
+			image = mm.data().createImage(myPixels, (int)irisAcq.width, (int)irisAcq.height,thisImp.getBytesPerPixel(),1,myCoords, myMeta);
+			store.putImage(image);
 		}
 	}
 }
 
-zProjector = new ZProjector();
-zProjector.setMethod(0);
-zProjector.setImage(burstImp);
-zProjector.doProjection();
-mirrorImp = zProjector.getProjection();
-mirrorImp.set("Mirror frames");
+IJ.run(display.getImagePlus(), "Z Project...", "projection=[Average Intensity]");
+mirrorImp = IJ.getImage();
+mirrorImp.setTitle("Mirror frames");
 mirrorImp.show();
