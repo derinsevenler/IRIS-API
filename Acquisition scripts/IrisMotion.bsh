@@ -9,9 +9,9 @@ IrisMotion(){
 	loadY = 50000;
 	loadZ = 50000;
 
-	imageX = 31000;
-	imageY = 7000;
-	imageZ = 43400;
+	imageX = 35597;
+	imageY = 6913;
+	imageZ = 42652;
 
 	movingDlg(){
 		JFrame frame = new JFrame("Stage in motion");
