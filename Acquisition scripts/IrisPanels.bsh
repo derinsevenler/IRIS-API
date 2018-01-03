@@ -254,11 +254,11 @@ IrisPanels() {
 		return this;
 	}
 
-	makeChipInfoPanel(){
-		chipTypeBox = new JComboBox()
+	// makeChipInfoPanel(){
+	// 	chipTypeBox = new JComboBox()
 
-		return this;
-	}
+	// 	return this;
+	// }
 
 
 	
