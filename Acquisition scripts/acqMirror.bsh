@@ -46,6 +46,7 @@ for (int x=0; x<nPosX; x++){
 		}
 	}
 }
+mmc.setXYPosition(startX, startY);
 
 IJ.run(display.getImagePlus(), "Z Project...", "projection=[Average Intensity]");
 mirrorImp = IJ.getImage();

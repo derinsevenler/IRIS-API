@@ -222,12 +222,13 @@ IrisPanels() {
 	}
 
 	makeAdjustmentPanel(){
+		thisFont = new Font("Deja Vu MS", Font.PLAIN, 16);
 		text1 = new JLabel("Adjust chip position.", SwingConstants.CENTER);
-		text1.setFont(new Font("Deja Vu MS", Font.PLAIN, 16));
+		text1.setFont(thisFont);
 		text2 = new JLabel("You can use the stage control panel, or", SwingConstants.CENTER);
-		text2.setFont(new Font("Deja Vu MS", Font.PLAIN, 16));
+		text2.setFont(thisFont);
 		text3 = new JLabel("click and drag on the image.", SwingConstants.CENTER);
-		text3.setFont(new Font("Deja Vu MS", Font.PLAIN, 16));
+		text3.setFont(thisFont);
 
 		continueButton = new JButton("Continue");
 		clicked = false;

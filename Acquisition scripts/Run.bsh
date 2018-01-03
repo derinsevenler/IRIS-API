@@ -97,8 +97,10 @@ while (!adjustPanel.clicked)
 	Thread.sleep(100);
 
 
-// 2.35: Acquire a mirror image here
-// 2.3: Flow blank solution. Ensure correct focus.
+// 2.35: Acquire a mirror image here?
+// 2.3: Flow blank solution. 
+
+// Ensure correct focus.
 
 
 // 2.4: Acquire a wet 'pre' image, for normalization.
